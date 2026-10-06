@@ -50,7 +50,7 @@ export default async function Inicio() {
           <p className="text-xs uppercase tracking-wide text-muted">Próxima aula</p>
           {reserva ? (
             <>
-              <p className="mt-1 font-titulo text-2xl font-extrabold capitalize">
+              <p className="mt-1 font-titulo text-2xl font-extrabold">
                 {diaSemanaBR(reserva.inicio, "long")}, {horaBR(reserva.inicio)}
               </p>
               <p className="text-sm text-muted">{dataBR(reserva.inicio, { day: "2-digit", month: "long" })} · {reserva.gyms?.nome}</p>

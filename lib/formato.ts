@@ -19,8 +19,10 @@ export function horaBR(valor: string | Date) {
   return new Date(valor).toLocaleTimeString("pt-BR", { timeZone: FUSO, hour: "2-digit", minute: "2-digit" });
 }
 
+// "Terça-feira" / "Ter" (primeira letra maiúscula)
 export function diaSemanaBR(valor: string | Date, formato: "long" | "short" = "short") {
-  return dataBR(valor, { weekday: formato }).replace(".", "");
+  const s = dataBR(valor, { weekday: formato }).replace(".", "");
+  return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
 // "AAAA-MM-DD" no fuso local

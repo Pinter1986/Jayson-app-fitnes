@@ -72,7 +72,7 @@ export default function AgendaAluno({
           {minhas.map((r) => (
             <div key={r.id} className="flex items-center justify-between gap-3 p-4">
               <div>
-                <p className="font-semibold capitalize">
+                <p className="font-semibold">
                   {diaSemanaBR(r.inicio, "long")}, {dataBR(r.inicio, { day: "2-digit", month: "2-digit" })} · {horaBR(r.inicio)}
                 </p>
                 <p className="text-sm text-muted">
@@ -106,7 +106,7 @@ export default function AgendaAluno({
       {porDia.length === 0 && <Vazio>Sem horários livres nos próximos dias.</Vazio>}
       {porDia.map(([dia, lista]) => (
         <div key={dia} className="mb-4">
-          <p className="mb-2 font-semibold capitalize">
+          <p className="mb-2 font-semibold">
             {diaSemanaBR(dia + "T12:00:00-03:00", "long")}, {dataBR(dia, { day: "2-digit", month: "2-digit" })}
           </p>
           <div className="grid grid-cols-4 gap-2">
@@ -133,7 +133,7 @@ export default function AgendaAluno({
       {escolhido && (
         <div className="fixed inset-x-0 bottom-[calc(4.5rem+env(safe-area-inset-bottom))] z-30 px-4">
           <Cartao className="mx-auto max-w-md shadow-2xl">
-            <p className="font-semibold capitalize">
+            <p className="font-semibold">
               {diaSemanaBR(escolhido.inicio, "long")}, {horaBR(escolhido.inicio)} · {nomeAcademia(escolhido.academia_id ?? academia)}
             </p>
             {escolhido.academia_id && escolhido.academia_id !== academia && (
