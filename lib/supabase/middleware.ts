@@ -7,12 +7,33 @@ function ehPublica(path: string) {
   return PUBLICAS.some((p) => (p === "/" ? path === "/" : path === p || path.startsWith(p + "/")));
 }
 
+// Sem as chaves do Supabase o app não funciona: mostra o motivo em vez de um erro 500 genérico
+function faltaConfiguracao(faltando: string[]) {
+  const html = `<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Configuração pendente</title>
+<body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#0E0E10;color:#f5f5f5;font-family:system-ui,sans-serif;padding:24px">
+<div style="max-width:440px"><h1 style="font-size:20px">Configuração pendente</h1>
+<p>Faltam estas variáveis de ambiente na Vercel (Settings › Environment Variables):</p>
+<ul>${faltando.map((n) => `<li><code>${n}</code></li>`).join("")}</ul>
+<p>Depois de cadastrar, faça um <b>Redeploy</b>.</p></div></body></html>`;
+  return new NextResponse(html, { status: 503, headers: { "content-type": "text/html; charset=utf-8" } });
+}
+
 export async function updateSession(request: NextRequest) {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const chave = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !chave) {
+    return faltaConfiguracao([
+      ...(url ? [] : ["NEXT_PUBLIC_SUPABASE_URL"]),
+      ...(chave ? [] : ["NEXT_PUBLIC_SUPABASE_ANON_KEY"]),
+    ]);
+  }
+
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    url,
+    chave,
     {
       cookies: {
         getAll: () => request.cookies.getAll(),
@@ -25,9 +46,14 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let user = null;
+  try {
+    ({
+      data: { user },
+    } = await supabase.auth.getUser());
+  } catch {
+    // Supabase fora do ar ou URL errada: trata como visitante
+  }
 
   const path = request.nextUrl.pathname;
   if (!user && !ehPublica(path)) {
