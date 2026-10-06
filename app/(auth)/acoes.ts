@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import type { Resultado } from "@/components/Formulario";
+import { traduzErroAuth } from "@/lib/erros-auth";
 import { createClient } from "@/lib/supabase/server";
 
 async function origem() {
@@ -12,26 +13,11 @@ async function origem() {
 }
 
 function traduz(msg: string) {
-  if (/invalid login credentials/i.test(msg)) return "E-mail ou senha incorretos.";
-  if (/email not confirmed/i.test(msg)) return "Confirme seu e-mail pelo link que enviamos antes de entrar.";
-  if (/already registered/i.test(msg)) return "Este e-mail já tem cadastro. Use \"Entrar\" ou \"Esqueci minha senha\".";
-  if (/password should be at least/i.test(msg)) return "A senha precisa ter pelo menos 8 caracteres.";
-  if (/rate limit|security purposes/i.test(msg)) return "Muitas tentativas. Espere um minuto e tente de novo.";
-  return "Não deu certo agora. Tente de novo em instantes.";
+  console.error("auth", msg);
+  return traduzErroAuth(msg);
 }
 
 const texto = (d: FormData, campo: string) => String(d.get(campo) ?? "").trim();
-
-export async function entrar(_: Resultado, dados: FormData): Promise<Resultado> {
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: texto(dados, "email").toLowerCase(),
-    password: String(dados.get("senha") ?? ""),
-  });
-  if (error) return { erro: traduz(error.message) };
-  const { data: perfil } = await supabase.from("profiles").select("papel").eq("id", data.user.id).single();
-  redirect(perfil?.papel === "admin" ? "/admin" : "/inicio");
-}
 
 export async function cadastrar(_: Resultado, dados: FormData): Promise<Resultado> {
   const senha = String(dados.get("senha") ?? "");
