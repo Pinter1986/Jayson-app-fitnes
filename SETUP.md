@@ -17,6 +17,23 @@ Tudo no nome e no e-mail do Jayson (jaysone2012@gmail.com).
 5. **Authentication › Emails**: traduza os textos dos e-mails de confirmação e de nova senha (opcional, recomendado).
 6. Copie de **Project Settings › API**: a URL, a chave `anon` e a chave `service_role`.
 
+## 1b. Dados de demonstração (para testar antes de abrir para os alunos)
+No SQL Editor, rode `supabase/demo.sql`. Ele cria 6 alunos de teste, todos com a senha **Demo@1234**:
+
+| Login | Para ver |
+|---|---|
+| ana.demo@exemplo.com | aluna em dia, treinos A/B com gráfico de carga, avaliações, aulas marcadas |
+| bruno.demo@exemplo.com | mensalidade em atraso (com multa) |
+| carla.demo@exemplo.com | aniversário no mês, treino para trocar, indicada pela Ana |
+| diego.demo@exemplo.com | consultoria online |
+| elisa.demo@exemplo.com | cadastro novo: plano pendente e tela de primeiro acesso |
+| felipe.demo@exemplo.com | cancelamento de plano pedido (aviso de 30 dias) |
+
+Também cria uma biblioteca de 17 exercícios e um treino modelo, que podem ficar.
+Pode rodar de novo quando quiser: recria tudo com as datas do dia.
+Antes de abrir para os alunos de verdade, rode `supabase/demo_remover.sql`
+(apaga só os alunos de demonstração e o que está ligado a eles).
+
 ## 2. Vercel (hospedagem)
 1. Crie a conta em vercel.com com o GitHub e importe este repositório.
 2. Em **Environment Variables**, cadastre:

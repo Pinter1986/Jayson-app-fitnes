@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { DM_Sans, Poppins } from "next/font/google";
 import { cookies } from "next/headers";
 import RegistrarSW from "@/components/RegistrarSW";
+import SessaoSupabase from "@/components/SessaoSupabase";
 import "./globals.css";
 
 const poppins = Poppins({ subsets: ["latin"], weight: ["600", "800"], style: ["normal", "italic"], variable: "--font-poppins" });
@@ -28,6 +29,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className="min-h-dvh antialiased">
         {children}
         <RegistrarSW />
+        <SessaoSupabase />
       </body>
     </html>
   );
