@@ -17,7 +17,10 @@ function traduz(msg: string) {
   if (/already registered/i.test(msg)) return "Este e-mail já tem cadastro. Use \"Entrar\" ou \"Esqueci minha senha\".";
   if (/password should be at least/i.test(msg)) return "A senha precisa ter pelo menos 8 caracteres.";
   if (/rate limit|security purposes/i.test(msg)) return "Muitas tentativas. Espere um minuto e tente de novo.";
-  return "Não deu certo agora. Tente de novo em instantes.";
+  if (/sending (confirmation|recovery|magic link)? ?email|smtp/i.test(msg))
+    return "Não foi possível enviar o e-mail de confirmação. Avise o Jayson para liberar seu acesso.";
+  console.error("auth", msg);
+  return `Não deu certo agora. Tente de novo em instantes. (detalhe: ${msg})`;
 }
 
 const texto = (d: FormData, campo: string) => String(d.get(campo) ?? "").trim();
