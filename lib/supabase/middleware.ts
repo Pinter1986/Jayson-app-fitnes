@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { SUPABASE_ANON_KEY, SUPABASE_URL } from "./config";
 
 const PUBLICAS = ["/", "/entrar", "/cadastro", "/esqueci-senha", "/auth"];
 
@@ -20,8 +21,8 @@ function faltaConfiguracao(faltando: string[]) {
 }
 
 export async function updateSession(request: NextRequest) {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const chave = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const url = SUPABASE_URL;
+  const chave = SUPABASE_ANON_KEY;
   if (!url || !chave) {
     return faltaConfiguracao([
       ...(url ? [] : ["NEXT_PUBLIC_SUPABASE_URL"]),
