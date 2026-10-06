@@ -28,6 +28,11 @@ export async function updateSession(request: NextRequest) {
       ...(chave ? [] : ["NEXT_PUBLIC_SUPABASE_ANON_KEY"]),
     ]);
   }
+  if (!/^https?:\/\/[^\s/]+\/?$/.test(url)) {
+    return faltaConfiguracao([
+      "NEXT_PUBLIC_SUPABASE_URL está com valor inválido: use só o endereço, no formato https://xxxx.supabase.co (sem espaços e sem /rest/v1)",
+    ]);
+  }
 
   let response = NextResponse.next({ request });
 
