@@ -35,6 +35,18 @@ export async function updateSession(request: NextRequest) {
     ]);
   }
 
+  const path = request.nextUrl.pathname;
+
+  // Sem cookie de sessão do Supabase não há o que renovar: visitante, sem chamar o Supabase
+  const temSessao = request.cookies.getAll().some((c) => c.name.startsWith("sb-"));
+  if (!temSessao) {
+    if (ehPublica(path)) return NextResponse.next({ request });
+    const destino = request.nextUrl.clone();
+    destino.pathname = "/entrar";
+    destino.search = "";
+    return NextResponse.redirect(destino);
+  }
+
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -61,7 +73,6 @@ export async function updateSession(request: NextRequest) {
     // Supabase fora do ar ou URL errada: trata como visitante
   }
 
-  const path = request.nextUrl.pathname;
   if (!user && !ehPublica(path)) {
     const url = request.nextUrl.clone();
     url.pathname = "/entrar";
